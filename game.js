@@ -15,12 +15,19 @@ var config = {
         update: update
     }
 };
+console.log(Phaser.Input.Keyboard.KeyCodes)
 
 var game = new Phaser.Game(config);
 var player;
 var platforms;
 var cursors;
 var text;
+
+let keyz;
+let keyS;
+let keyD;
+let keyQ;
+let score = 0;
 
 function preload () {
     this.load.image('sky', 'sky.png');
@@ -42,7 +49,9 @@ function create () {
 
     platforms.create(600, 400, 'ground');
     platforms.create(50, 250, 'ground');
-    platforms.create(750, 220, 'ground');
+    platforms.create(400, 100, 'ground');
+    platforms.create(750, 200, 'ground');
+    // platforms.create(750, 220, 'ground');
 
     player = this.physics.add.sprite(100, 450, 'dude');
 
@@ -71,21 +80,37 @@ function create () {
 
     player.body.setGravityY(300)
     this.physics.add.collider(player, platforms);
+
+
     cursors = this.input.keyboard.createCursorKeys();
+    keyZ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+    keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+    keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+    keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
+
     text = this.add.text(16, 16, '', { fontSize: '32px', fill: '#000' });
+
+    stars = this.physics.add.group({
+        key: 'star',
+        repeat: 11,
+        setXY: { x: 12, y: 0, stepX: 70 }
+    });
+    stars.children.iterate(function (child) {
+    
+        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+    
+    });
+    this.physics.add.collider(stars, platforms);
+    this.physics.add.overlap(player, stars, collectStar, null, this);
 }
 
 function update () {
-    if (cursors.left.isDown)
-    {
-        text.setText('Left')
+    if (keyQ.isDown) {
         player.setVelocityX(-200);
 
         player.anims.play('left', true);
     }
-    else if (cursors.right.isDown)
-    {
-        text.setText('Right')
+    else if (keyD.isDown) {
         player.setVelocityX(200);
 
         player.anims.play('right', true);
@@ -95,9 +120,15 @@ function update () {
         player.anims.play('turn');
     }
 
-    if (cursors.up.isDown && player.body.touching.down)
-    {
-        text.setText('Jump')
+    if (keyZ.isDown && player.body.touching.down) {
         player.setVelocityY(-475);
+    } else if (keyS.isDown && !player.body.touching.down) {
+        player.setVelocityY(475);
     }
+}
+
+function collectStar (player, star) {
+    score = score + 1;
+    star.disableBody(true, true);
+    text.setText('Stars: ' + score)
 }
