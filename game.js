@@ -1,6 +1,6 @@
 const config = {
-    width: 500,
-    height: 300,
+    width: 1080,
+    height: 720,
     type: Phaser.AUTO,
     physics: {
         default: 'arcade',
@@ -14,34 +14,33 @@ const config = {
         update: update
     }
 }
+const game = new Phaser.Game(config)
 
 let dude;
 let cursors;
-var game = new Phaser.Game(config)
+let platforms;
 
 function preload() {
-    this.load.image('dude', 'mario.png')
+    this.load.image('dude', './mario.png')
 }
 
 function create() {
-    dude = this.physics.add.image(100, 100, 'dude')
-    dude.body.collideWorldBounds = true;
+    dude = this.physics.add.image(0, 0, 'dude')
+    dude.body.collideWorldBounds = true
 
     cursors = this.input.keyboard.createCursorKeys()
 }
 
 function update() {
-    dude.setVelocityX(0)
-    if(cursors.up.isDown) {
-        dude.setVelocity(0, -300)
-        console.log('hehe')
+    dude.body.velocity.x = 0
+
+    if (cursors.left.isDown) {
+        dude.body.velocity.x = -150
+    } else if (cursors.right.isDown) {
+        dude.body.velocity.x = 150
     }
-    if(cursors.right.isDown) {
-        dude.setVelocity(300, 0)
-        console.log('hehe')
-    }
-    if(cursors.left.isDown) {
-        dude.setVelocity(-300, 0)
-        console.log('hehe')
+
+    if (cursors.up.isDown && dude.body.blocked.down) {
+        dude.body.velocity.y = -200
     }
 }
