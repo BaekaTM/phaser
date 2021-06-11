@@ -1,11 +1,12 @@
-const config = {
-    width: 1080,
-    height: 720,
+var config = {
     type: Phaser.AUTO,
+    width: 800,
+    height: 600,
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: {y: 300}
+            gravity: { y: 300 },
+            debug: false
         }
     },
     scene: {
@@ -13,34 +14,90 @@ const config = {
         create: create,
         update: update
     }
+};
+
+var game = new Phaser.Game(config);
+var player;
+var platforms;
+var cursors;
+var text;
+
+function preload () {
+    this.load.image('sky', 'sky.png');
+    this.load.image('ground', 'platform.png');
+    this.load.image('star', 'star.png');
+    this.load.image('bomb', 'bomb.png');
+    this.load.spritesheet('dude', 
+        'dude.png',
+        { frameWidth: 32, frameHeight: 48 }
+    );
 }
-const game = new Phaser.Game(config)
 
-let dude;
-let cursors;
-let platforms;
+function create () {
+    this.add.image(400, 300, 'sky');
 
-function preload() {
-    this.load.image('dude', './mario.png')
+    platforms = this.physics.add.staticGroup();
+
+    platforms.create(400, 568, 'ground').setScale(2).refreshBody();
+
+    platforms.create(600, 400, 'ground');
+    platforms.create(50, 250, 'ground');
+    platforms.create(750, 220, 'ground');
+
+    player = this.physics.add.sprite(100, 450, 'dude');
+
+    player.setBounce(0.2);
+    player.setCollideWorldBounds(true);
+
+    this.anims.create({
+        key: 'left',
+        frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
+        frameRate: 10,
+        repeat: -1
+    });
+
+    this.anims.create({
+        key: 'turn',
+        frames: [ { key: 'dude', frame: 4 } ],
+        frameRate: 20
+    });
+
+    this.anims.create({
+        key: 'right',
+        frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+        frameRate: 10,
+        repeat: -1
+    });
+
+    player.body.setGravityY(300)
+    this.physics.add.collider(player, platforms);
+    cursors = this.input.keyboard.createCursorKeys();
+    text = this.add.text(16, 16, '', { fontSize: '32px', fill: '#000' });
 }
 
-function create() {
-    dude = this.physics.add.image(0, 0, 'dude')
-    dude.body.collideWorldBounds = true
+function update () {
+    if (cursors.left.isDown)
+    {
+        text.setText('Left')
+        player.setVelocityX(-200);
 
-    cursors = this.input.keyboard.createCursorKeys()
-}
+        player.anims.play('left', true);
+    }
+    else if (cursors.right.isDown)
+    {
+        text.setText('Right')
+        player.setVelocityX(200);
 
-function update() {
-    dude.body.velocity.x = 0
-
-    if (cursors.left.isDown) {
-        dude.body.velocity.x = -150
-    } else if (cursors.right.isDown) {
-        dude.body.velocity.x = 150
+        player.anims.play('right', true);
+    }
+    else {
+        player.setVelocityX(0);
+        player.anims.play('turn');
     }
 
-    if (cursors.up.isDown && dude.body.blocked.down) {
-        dude.body.velocity.y = -200
+    if (cursors.up.isDown && player.body.touching.down)
+    {
+        text.setText('Jump')
+        player.setVelocityY(-475);
     }
 }
