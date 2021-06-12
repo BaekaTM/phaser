@@ -2,6 +2,7 @@ var config = {
     type: Phaser.AUTO,
     width: 800,
     height: 600,
+    parent: 'phaser-game',
     physics: {
         default: 'arcade',
         arcade: {
@@ -30,7 +31,7 @@ let keyQ;
 let score = 0;
 
 function preload () {
-    this.load.image('sky', 'sky.png');
+    this.load.image('background', 'background.png');
     this.load.image('ground', 'platform.png');
     this.load.image('star', 'star.png');
     this.load.image('bomb', 'bomb.png');
@@ -41,7 +42,11 @@ function preload () {
 }
 
 function create () {
-    this.add.image(400, 300, 'sky');
+    background = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'background')
+    let scaleX = this.cameras.main.width / background.width
+    let scaleY = this.cameras.main.height / background.height
+    let scale = Math.max(scaleX, scaleY)
+    background.setScale(scale).setScrollFactor(0)
 
     platforms = this.physics.add.staticGroup();
 
