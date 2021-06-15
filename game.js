@@ -95,18 +95,18 @@ function create () {
 
     text = this.add.text(16, 16, '', { fontSize: '32px', fill: '#000' });
 
-//     stars = this.physics.add.group({
-//         key: 'star',
-//         repeat: 11,
-//         setXY: { x: 12, y: 0, stepX: 70 }
-//     });
-//     stars.children.iterate(function (child) {
+     stars = this.physics.add.group({
+         key: 'star',
+         repeat: 11,
+         setXY: { x: 12, y: 0, stepX: 70 }
+     });
+     stars.children.iterate(function (child) {
     
-//         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
     
-//     });
-//     this.physics.add.collider(stars, platforms);
-//     this.physics.add.overlap(player, stars, collectStar, null, this);
+     });
+     this.physics.add.collider(stars, platforms);
+     this.physics.add.overlap(player, stars, collectStar, null, this);
 }
 
 function update () {
