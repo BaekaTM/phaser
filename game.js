@@ -31,10 +31,11 @@ let keyQ;
 let score = 0;
 
 function preload () {
-    this.load.image('background', 'background.png');
+    this.load.image('background', 'sky.png');
     this.load.image('ground', 'platform.png');
     this.load.image('star', 'star.png');
     this.load.image('bomb', 'bomb.png');
+    this.load.image('gimp', 'test.png');
     this.load.spritesheet('dude', 
         'dude.png',
         { frameWidth: 32, frameHeight: 48 }
@@ -51,7 +52,6 @@ function create () {
     platforms = this.physics.add.staticGroup();
 
     platforms.create(400, 568, 'ground').setScale(2).refreshBody();
-
     platforms.create(600, 400, 'ground');
     platforms.create(50, 250, 'ground');
     platforms.create(400, 100, 'ground');
@@ -95,18 +95,18 @@ function create () {
 
     text = this.add.text(16, 16, '', { fontSize: '32px', fill: '#000' });
 
-     stars = this.physics.add.group({
-         key: 'star',
-         repeat: 11,
-         setXY: { x: 12, y: 0, stepX: 70 }
-     });
-     stars.children.iterate(function (child) {
+    stars = this.physics.add.group({
+        key: 'star',
+        repeat: 11,
+        setXY: { x: 12, y: 0, stepX: 70 }
+    });
+    stars.children.iterate(function (child) {
     
-         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
     
-     });
-     this.physics.add.collider(stars, platforms);
-     this.physics.add.overlap(player, stars, collectStar, null, this);
+    });
+    this.physics.add.collider(stars, platforms);
+    this.physics.add.overlap(player, stars, collectStar, null, this);
 }
 
 function update () {
@@ -122,6 +122,8 @@ function update () {
     }
     else {
         player.setVelocityX(0);
+
+        player.anims.play('turn', true)
     }
 
     if (keyZ.isDown && player.body.touching.down) {
