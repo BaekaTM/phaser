@@ -110,7 +110,7 @@ function create () {
     keySpace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     keyShift = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
 
-    text = this.add.text(this.cameras.main.width / 2 - 130, 150, 'Les thermes (En vrai c pas ça)', { fontSize: '16px', fill: '#000' });
+    text = this.add.text(this.cameras.main.width / 2 - 137, 150, 'Les thermes (En vrai c pas ici)', { fontSize: '16px', fill: '#000' });
     this.physics.add.overlap(player, water, baisse_gravity, null, this);
 
 
