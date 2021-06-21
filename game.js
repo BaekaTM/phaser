@@ -158,5 +158,5 @@ function collectStar (player, star) {
 }
 
 function baisse_gravity (player, water) {
-    this.physics.arcade.gravity.y = 150;
+    this.physics.arcade.gravity.y = 0;
 }
