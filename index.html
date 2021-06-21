@@ -266,10 +266,6 @@
             stroke-dasharray: 3804;
             stroke-dashoffset: 3804;
         }
-        
-        #signature[data-scroll="in"] {
-            animation: anime 3s ease-in-out both;
-        }
 
         @keyframes anime {
             to {
@@ -300,12 +296,19 @@
             background-color: #000;
         }
     </style>
-    <script src="https://unpkg.com/scroll-out/dist/scroll-out.min.js"></script>
     <script>
         
-        ScrollOut({
-            scrollingElement: "#signature"
-        });
+        var target = document.querySelector('#signature');
+        var callback = function(entries, observer) {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.style.animation = "anime 3s ease-in-out both";
+            }
+          });
+        };
+        var observer = new IntersectionObserver(callback, options);
+        observer.observe(target);
+        
 
         randomInt = (min, max) => {
             return Math.random() * (max - min) + min;
