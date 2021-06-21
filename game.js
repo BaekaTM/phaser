@@ -132,7 +132,7 @@ function update () {
     if (keyQ.isDown) {
         player.setVelocityX(-200);
 
-        player.anims.play('left', true);
+        player.anims.play('left', true); 
     }
     else if (keyD.isDown) {
         player.setVelocityX(200);
@@ -158,5 +158,5 @@ function collectStar (player, star) {
 }
 
 function baisse_gravity (player, water) {
-    Phaser.physics.arcade.gravity.y = 200;
+    this.physics.arcade.gravity.y = 150;
 }
